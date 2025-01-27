@@ -4,7 +4,6 @@
 
 ![ESP32 Weather Alert](assets/webgui.png)
 
-
 ## Table of Contents
 
 - [Overview](#overview)
@@ -14,6 +13,8 @@
 - [Installation](#installation)
 - [Configuration](#configuration)
 - [Usage](#usage)
+  - [1. Using VSCode PlatformIO Extension](#1-using-vscode-platformio-extension)
+  - [2. Using Terminal with PlatformIO CLI](#2-using-terminal-with-platformio-cli)
 - [Project Structure](#project-structure)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
@@ -44,7 +45,7 @@ The **ESP32 Weather Alert System** is a comprehensive project that utilizes an E
 
 ### Example Hardware Setup
 
-![Hardware Setup](https://github.com/yourusername/esp32-c3-home-weather-alert/assets/hardware_setup.jpg?raw=true)
+![Hardware Setup](https://github.com/jakhon37/esp32-c3-home-weather-alert/assets/hardware_setup.jpg?raw=true)
 <!-- ![Hardware Setup](https://github.com/yourusername/esp32-c3-home-weather-alert/blob/main/assets/hardware_setup.jpg?raw=true) -->
 
 ## Software Requirements
@@ -79,20 +80,20 @@ Clone this repository to your local machine:
 
 ```sh
 git clone https://github.com/jakhon37/esp32-c3-home-weather-alert.git
-cd esp32-weather-alert
+cd esp32-c3-home-weather-alert
 ```
 
 ### 3. Open the Project in VSCode
 
 1. Open VSCode.
-2. Navigate to **File > Open Folder** and select the cloned `esp32-weather-alert` directory.
+2. Navigate to **File > Open Folder** and select the cloned `esp32-c3-home-weather-alert` directory.
 3. PlatformIO should automatically detect the project configuration.
 
 ### 4. Install Dependencies
 
 Ensure that all required libraries are installed. PlatformIO manages dependencies via the `platformio.ini` file. To install them:
 
-1. Open the Terminal in VSCode (`Ctrl+` or **View > Terminal**).
+1. Open the Terminal in VSCode (`Ctrl+`` or **View > Terminal**).
 2. Run the build command to trigger library installation:
 
    ```sh
@@ -147,35 +148,125 @@ Modify the `TEMP_CHANGE_THRESHOLD` and `HUM_CHANGE_THRESHOLD` in `Config.h` to s
 
 ## Usage
 
-### 1. Upload the Firmware to ESP32
+You can run the project in two primary ways:
 
-1. Connect your ESP32 development board to your computer via USB.
-2. Select the appropriate board and port in PlatformIO:
-   - Open the PlatformIO Home.
-   - Navigate to **Projects > [Your Project] > PlatformIO**.
-   - Ensure that the `platformio.ini` has the correct board configuration.
-3. Build and upload the firmware:
-   
+### 1. Using VSCode PlatformIO Extension
+
+This method leverages the integrated development environment features of VSCode with the PlatformIO extension.
+
+#### Steps:
+
+1. **Open the Project in VSCode:**
+   - Launch VSCode.
+   - Open the `esp32-c3-home-weather-alert` folder via **File > Open Folder**.
+
+2. **Configure PlatformIO:**
+   - Ensure that the `platformio.ini` file is correctly set up with your board and environment settings.
+   - Example `platformio.ini`:
+
+     ```ini
+     [env:esp32-c3-devkitm-1]
+     platform = espressif32
+     board = esp32-c3-devkitm-1
+     framework = arduino
+
+     monitor_speed = 115200
+
+     lib_deps = 
+         mobizt/ESP Mail Client @ ^3.4.24
+         adafruit/DHT sensor library @ ^1.4.6
+     ```
+
+3. **Build the Project:**
+   - Click on the **PlatformIO Build** button (checkmark icon) in the bottom bar or use the Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P` on macOS) and select `PlatformIO: Build`.
+
+4. **Upload the Firmware:**
+   - Connect your ESP32 board via USB.
+   - Click on the **PlatformIO Upload** button (right arrow icon) or use the Command Palette and select `PlatformIO: Upload`.
+
+5. **Monitor Serial Output:**
+   - Click on the **PlatformIO Monitor** button (plug icon) or use the Command Palette and select `PlatformIO: Monitor`.
+   - Set the baud rate to `115200` if prompted.
+
+6. **Interact with the Web-Based GUI:**
+   - After successful deployment, note the IP address displayed in the serial monitor.
+   - Open a web browser and navigate to `http://<ESP32_IP_Address>` to access the GUI.
+
+### 2. Using Terminal with PlatformIO CLI
+
+For those who prefer using the command line, PlatformIO provides a robust CLI to manage builds, uploads, and monitoring.
+
+#### Prerequisites:
+
+- **PlatformIO CLI Installed:** Ensure that PlatformIO is installed. If you have the PlatformIO extension in VSCode, the CLI is typically available. Alternatively, you can install it globally using Python's `pip`:
+
+  ```sh
+  pip install platformio
+  ```
+
+#### Steps:
+
+1. **Navigate to Project Directory:**
+
+   ```sh
+   cd path/to/esp32-c3-home-weather-alert
+   ```
+
+2. **Build the Project:**
+
+   ```sh
+   pio run
+   ```
+
+   - This command compiles the project and installs any missing dependencies as specified in `platformio.ini`.
+
+3. **Upload the Firmware:**
+
    ```sh
    pio run -t upload
    ```
 
-4. Monitor the serial output to ensure successful deployment:
+   - Connect your ESP32 board via USB before running this command.
+   - The CLI will detect the board and upload the compiled firmware.
+
+4. **Monitor Serial Output:**
 
    ```sh
    pio device monitor -b 115200
    ```
 
-### 2. Monitor Sensor Data and Alerts
+   - This command opens a serial monitor with a baud rate of `115200`.
+   - To exit the monitor, press `Ctrl+]` or `Ctrl+X`.
 
-- The system will continuously read temperature and humidity data.
-- If sudden changes exceed the defined thresholds, an email alert will be sent to the specified recipient.
-- Logs and debug information will be available via the serial monitor for troubleshooting and verification.
+5. **Interact with the Web-Based GUI:**
+   - After successful deployment, note the IP address displayed in the serial monitor.
+   - Open a web browser and navigate to `http://<ESP32_IP_Address>` to access the GUI.
 
-### 3. Access the Web-Based GUI
+#### Additional CLI Commands:
 
-- (If implemented) Access the web GUI by navigating to the ESP32's IP address in a web browser.
-- Use the GUI to monitor real-time sensor data and adjust settings as needed.
+- **Clean the Build Environment:**
+
+  ```sh
+  pio run --target clean
+  ```
+
+  - Removes all compiled files, forcing a full rebuild on the next build command.
+
+- **Run Unit Tests:**
+
+  ```sh
+  pio test
+  ```
+
+  - Executes any tests located in the `test/` directory.
+
+- **Update PlatformIO Core:**
+
+  ```sh
+  pio upgrade
+  ```
+
+  - Updates PlatformIO Core to the latest version.
 
 ## Project Structure
 
@@ -198,7 +289,8 @@ esp32-weather-alert/
 ├── test/
 │   └── ... (test files)
 ├── platformio.ini
-└── README.md
+├── README.md
+└── CODE_OF_CONDUCT.md
 ```
 
 - **include/**: Contains configuration headers and shared declarations.
@@ -207,39 +299,9 @@ esp32-weather-alert/
 - **test/**: Unit tests and minimal test cases.
 - **platformio.ini**: PlatformIO project configuration file.
 - **README.md**: Project documentation.
+- **CODE_OF_CONDUCT.md**: Guidelines for community behavior.
 
-## Troubleshooting
-
-### Common Issues and Solutions
-
-1. **SMTPData Does Not Name a Type:**
-   - **Cause:** `SMTPData` class is deprecated in ESP Mail Client v3.x.
-   - **Solution:** Use `SMTPSession` and `SMTP_Message` instead. Ensure that your `EmailClient` class is updated accordingly.
-
-2. **Lambda Function Capturing 'this':**
-   - **Cause:** Callback lambda does not capture the `this` pointer, preventing access to class members.
-   - **Solution:** Modify the lambda to capture `this` by using `[this](SMTP_Status status) { ... }`.
-
-3. **Undefined Constants:**
-   - **Cause:** Constants like `esp_mail_content_type_plain_text` are not recognized.
-   - **Solution:** Ensure correct constant names are used as per the ESP Mail Client documentation. Alternatively, define them manually if necessary.
-
-4. **Failed to Send Email:**
-   - **Cause:** Incorrect SMTP configuration, network issues, or authentication failures.
-   - **Solution:** 
-     - Verify SMTP host and port.
-     - Ensure Wi-Fi connectivity.
-     - Use App Passwords if using Gmail and two-factor authentication.
-     - Check firewall or ISP restrictions on SMTP ports.
-
-5. **Serial Monitor Shows No Output:**
-   - **Cause:** Incorrect board selection or connection issues.
-   - **Solution:** 
-     - Ensure the correct board is selected in `platformio.ini`.
-     - Check USB connections and drivers.
-     - Restart the ESP32 board.
-
-### Additional Debugging Steps
+### Debugging Steps
 
 - **Enable Debugging:**
   - Ensure `smtp.debug(1);` is enabled in `EmailClient.cpp` to get detailed logs.
