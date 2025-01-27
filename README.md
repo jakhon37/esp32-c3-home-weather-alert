@@ -1,6 +1,6 @@
 # ESP32 Weather Alert System
 
-![ESP32 Weather Alert](https://github.com/yourusername/esp32-c3-home-weather-alert/blob/main/assets/webgui.png?raw=true)
+<!-- ![ESP32 Weather Alert](https://github.com/yourusername/esp32-c3-home-weather-alert/blob/main/assets/webgui.png?raw=true) -->
 
 ![ESP32 Weather Alert](assets/webgui.png)
 
@@ -44,7 +44,8 @@ The **ESP32 Weather Alert System** is a comprehensive project that utilizes an E
 
 ### Example Hardware Setup
 
-![Hardware Setup](https://github.com/yourusername/esp32-c3-home-weather-alert/blob/main/assets/hardware_setup.jpg?raw=true)
+![Hardware Setup](https://github.com/yourusername/esp32-c3-home-weather-alert/assets/hardware_setup.jpg?raw=true)
+<!-- ![Hardware Setup](https://github.com/yourusername/esp32-c3-home-weather-alert/blob/main/assets/hardware_setup.jpg?raw=true) -->
 
 ## Software Requirements
 
