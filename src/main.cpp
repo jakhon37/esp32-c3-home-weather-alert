@@ -35,7 +35,7 @@ EmailClient emailClient(
 WebGui webGui;
 
 // Instantiate Display
-// Display displayLCD(LCD_ADDRESS, LCD_COLS, LCD_ROWS, SDA_PIN, SCL_PIN); // I2C address 0x27, 16 columns, 2 rows
+Display displayLCD(LCD_ADDRESS, LCD_COLS, LCD_ROWS, SDA_PIN, SCL_PIN); // I2C address 0x27, 16 columns, 2 rows
 // Display displayLCD(0x27, 16, 2); // I2C address 0x27, 16 columns, 2 rows
 
 
@@ -57,7 +57,7 @@ void setup() {
     delay(100);
 
     // Initialize LCD Display
-    // displayLCD.init();
+    displayLCD.init();
     Serial.println("LCD Display Initialized.");
 
     // Initialize DHT Sensor
@@ -120,7 +120,7 @@ void loop() {
             webGui.setSensorData(Temperature, Humidity);
             Serial.printf("Temperature: %.1f°C, Humidity: %.1f%%\n", Temperature, Humidity);
             // Update the LCD with new sensor data
-            // displayLCD.displayTempHum(Temperature, Humidity);
+            displayLCD.displayTempHum(Temperature, Humidity);
 
             // Calculate differences from previous readings
             float tempDiff = Utils::calculateDifference(Temperature, prevTemperature);
@@ -150,7 +150,7 @@ void loop() {
             // prevHumidity = Humidity;
         } else {
             Serial.println("Failed to read from DHT sensor!");
-            // displayLCD.displayTempHum(0.0, 0.0); // Optional: Display error message
+            displayLCD.displayTempHum(0.0, 0.0); // Optional: Display error message
 
         }
     }

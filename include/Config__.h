@@ -6,21 +6,19 @@
 // ===========================
 // WiFi Configuration
 // ===========================
-const char* WIFI_SSID = "U+NetEFDA";
-const char* WIFI_PASSWORD = "5D2A1A9EM#";
+const char* WIFI_SSID = "Your_WiFi_SSID";
+const char* WIFI_PASSWORD = "Your_WiFi_Password";
 
 // ===========================
 // Email Configuration
 // ===========================
 const char* SMTP_HOST = "smtp.gmail.com";
 const uint16_t SMTP_PORT = 587; // esp_mail_smtp_port_587;  
-const char* EMAIL_USER = "jakhon@gachon.ac.kr";
-const char* EMAIL_PASSWORD = "#a123123";
-const char* USER_DOMAIN = "gachon.ac.kr";
+const char* EMAIL_USER = "your_email@gmail.com";
+const char* EMAIL_PASSWORD = "your_email_password_or_app_specific_password";
+const char* USER_DOMAIN = "gmail.com"; // change it according to your email domain
 
-const char* EMAIL_RECIPIENT = "jakhon37@aivar.kr";
-
-
+const char* EMAIL_RECIPIENT = "recipient_email@example.com";
 
 // ===========================
 // DHT Sensor Configuration
