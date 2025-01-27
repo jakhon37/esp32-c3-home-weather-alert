@@ -1,4 +1,4 @@
-# ESP32 Weather Alert System
+# ESP32 Home Weather Alert System
 
 <!-- ![ESP32 Weather Alert](https://github.com/yourusername/esp32-c3-home-weather-alert/blob/main/assets/webgui.png?raw=true) -->
 
