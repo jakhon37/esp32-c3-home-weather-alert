@@ -1,9 +1,11 @@
 #include <Arduino.h>
 #include <WiFi.h>
+#include <LiquidCrystal_I2C.h>
 
 #include "Config.h"
 #include "DhtSensor.h"
 #include "EmailClient.h"
+#include "LCDisplay.h"
 #include "WebGui.h"
 #include "Utils.h"
 
@@ -32,6 +34,11 @@ EmailClient emailClient(
 
 WebGui webGui;
 
+// Instantiate Display
+// Display displayLCD(LCD_ADDRESS, LCD_COLS, LCD_ROWS, SDA_PIN, SCL_PIN); // I2C address 0x27, 16 columns, 2 rows
+// Display displayLCD(0x27, 16, 2); // I2C address 0x27, 16 columns, 2 rows
+
+
 // Variables to store current and previous sensor readings
 float Temperature = 0.0;
 float Humidity = 0.0;
@@ -45,12 +52,17 @@ unsigned long lastAlertTime = 0;
 
 void setup() {
     Serial.begin(115200);
+    Serial.println("Starting     ESP32 Weather Alert System...");
+
     delay(100);
 
-
+    // Initialize LCD Display
+    // displayLCD.init();
+    Serial.println("LCD Display Initialized.");
 
     // Initialize DHT Sensor
     dhtSensor.begin();
+    Serial.println("DHT Sensor Initialized.");
 
     // Connect to WiFi
     Serial.println("Connecting to WiFi...");
@@ -107,6 +119,8 @@ void loop() {
             // Update the web GUI with new sensor data
             webGui.setSensorData(Temperature, Humidity);
             Serial.printf("Temperature: %.1f°C, Humidity: %.1f%%\n", Temperature, Humidity);
+            // Update the LCD with new sensor data
+            // displayLCD.displayTempHum(Temperature, Humidity);
 
             // Calculate differences from previous readings
             float tempDiff = Utils::calculateDifference(Temperature, prevTemperature);
@@ -136,6 +150,8 @@ void loop() {
             // prevHumidity = Humidity;
         } else {
             Serial.println("Failed to read from DHT sensor!");
+            // displayLCD.displayTempHum(0.0, 0.0); // Optional: Display error message
+
         }
     }
 }

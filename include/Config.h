@@ -27,6 +27,16 @@ const char* EMAIL_RECIPIENT = "recipient_email@example.com";
 #define DHTTYPE DHT22
 
 // ===========================
+// LCD Display Configuration
+// ===========================
+#define LCD_ADDRESS 0x27
+#define LCD_COLS 16
+#define LCD_ROWS 2
+
+#define SDA_PIN 8
+#define SCL_PIN 9
+
+// ===========================
 // Alert Thresholds
 // ===========================
 // In Config.h

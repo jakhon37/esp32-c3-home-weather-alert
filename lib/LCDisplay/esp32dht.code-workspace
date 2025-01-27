@@ -1,0 +1,25 @@
+{
+	"folders": [
+		{
+			"name": "esp32dht",
+			"path": "../../../esp32dht"
+		},
+		{
+			"name": "uno dht",
+			"path": "../../../uno dht"
+		},
+		{
+			"name": "esp32c32",
+			"path": "../../../esp32c32"
+		},
+		{
+			"name": "esp32c3 mail",
+			"path": "../../../esp32c3 mail"
+		},
+		{
+			"name": "esp32-c3-home-weather-alert",
+			"path": "../.."
+		}
+	],
+	"settings": {}
+}
