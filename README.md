@@ -77,7 +77,7 @@ If you haven't installed PlatformIO yet, follow these steps:
 Clone this repository to your local machine:
 
 ```sh
-git clone https://github.com/yourusername/esp32-weather-alert.git
+git clone https://github.com/yourusername/esp32-c3-home-weather-alert.git
 cd esp32-weather-alert
 ```
 
@@ -258,8 +258,8 @@ Contributions are welcome! Please follow these steps to contribute to the projec
 
 2. **Clone Your Fork:**
    ```sh
-   git clone https://github.com/yourusername/esp32-weather-alert.git
-   cd esp32-weather-alert
+   git clone https://github.com/yourusername/esp32-c3-home-weather-alert.git
+   cd esp32-c3-home-weather-alert
    ```
 
 3. **Create a New Branch:**
@@ -282,7 +282,8 @@ Contributions are welcome! Please follow these steps to contribute to the projec
 
 ### Code of Conduct
 
-Please adhere to the [Code of Conduct](https://github.com/yourusername/esp32-weather-alert/blob/main/CODE_OF_CONDUCT.md) when contributing to this project.
+Please adhere to the [Code of Conduct](https://github.com/jakhon37/esp32-c3-home-weather-alert/blob/main/CODE_OF_CONDUCT.md) when contributing to this project.
+Please adhere to the [Code of Conduct](https://github.com/jakhon37/esp32-c3-home-weather-alert/CODE_OF_CONDUCT.md) when contributing to this project.
 
 ## License
 
@@ -298,4 +299,4 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 **Happy Coding!**
 
-For any further questions or support, feel free to open an issue on the [GitHub repository](https://github.com/yourusername/esp32-weather-alert/issues).
+For any further questions or support, feel free to open an issue on the [GitHub repository](https://github.com/yourusername/esp32-c3-home-weather-alert/issues).
