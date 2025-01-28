@@ -92,10 +92,10 @@ Depending on your DHT sensor model, use the corresponding pinout diagram:
 <!-- ![DHT Pinouts](assets/dht_pinouts.webp) -->
 
 - **DHT11** or **DHT22** typically have:
-  1. **VCC** (3.3V)
-  2. **Data**
-  3. **NC** (Not Connected)
-  4. **GND**
+  - **VCC** (3.3V)
+  - **Data**
+  - **NC** (Not Connected)
+  - **GND**
 
 ---
 
