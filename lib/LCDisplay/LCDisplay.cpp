@@ -16,7 +16,7 @@ Display::Display(uint8_t address, uint8_t cols, uint8_t rows, uint8_t sda_pin, u
  * Sets up the LCD and turns on the backlight.
  */
 void Display::init() {
-    // Wire.begin(sda_pin_, scl_pin_);     // Initialize I2C communication   
+    Wire.begin(sda_pin_, scl_pin_);     // Initialize I2C communication   
     lcd_.init();                      // Initialize the LCD
     lcd_.backlight();                 // Turn on the backlight
     lcd_.clear();                     // Clear any residual content

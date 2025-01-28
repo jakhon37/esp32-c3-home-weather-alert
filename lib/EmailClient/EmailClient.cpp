@@ -35,7 +35,7 @@ EmailClient::EmailClient(const char* smtpHost, uint16_t smtpPort,
     recipient = recipientEmail;
 
     // Initialize SMTP
-    smtp.debug(1);
+    smtp.debug(0);
     smtp.callback(smtpCallback);
     smtp.setTCPTimeout(10);
 }

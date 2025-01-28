@@ -23,6 +23,7 @@ void WebGui::setSensorData(float temperature, float humidity) {
 }
 
 String WebGui::generateHTML() {
+    
     String page = "<!DOCTYPE html>\n";
     page += "<html lang='en'>\n";
     page += "<head>\n";
@@ -59,7 +60,7 @@ String WebGui::generateHTML() {
 
     // Body Content
     page += "<body>\n";
-    page += "  <h1>ESP32 DHT11 Weather Station</h1>\n";
+    page += "  <h1>ESP32 Home Weather Station</h1>\n";
     page += "  <div class='container'>\n";
 
     // Temperature Card

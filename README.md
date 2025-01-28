@@ -1,60 +1,113 @@
-# ESP32 Home Weather Alert System
 
-<!-- ![ESP32 Weather Alert](https://github.com/yourusername/esp32-c3-home-weather-alert/blob/main/assets/webgui.png?raw=true) -->
+# ESP32-C3 Home Weather Alert System
 
-![ESP32 Weather Alert](assets/webgui.png)
+<!-- Use a local or remote reference to your main image showcasing the project, e.g., a web GUI screenshot. -->
+![ESP32 Weather Alert](assets/weather_station.png)
 
 ## Table of Contents
 
 - [Overview](#overview)
 - [Features](#features)
 - [Hardware Requirements](#hardware-requirements)
+  - [Example Hardware Setup](#example-hardware-setup)
+  - [ESP32-C3 Pinout](#esp32-c3-pinout)
+  - [DHT Sensor Pinouts](#dht-sensor-pinouts)
 - [Software Requirements](#software-requirements)
 - [Installation](#installation)
+  - [1. Install PlatformIO](#1-install-platformio)
+  - [2. Clone the Repository](#2-clone-the-repository)
+  - [3. Open the Project in VSCode](#3-open-the-project-in-vscode)
+  - [4. Install Dependencies](#4-install-dependencies)
 - [Configuration](#configuration)
+  - [1. Configure Wi-Fi Credentials](#1-configure-wi-fi-credentials)
+  - [2. Adjust SMTP Port and Security Settings](#2-adjust-smtp-port-and-security-settings)
+  - [3. Calibrate Alert Thresholds](#3-calibrate-alert-thresholds)
 - [Usage](#usage)
   - [1. Using VSCode PlatformIO Extension](#1-using-vscode-platformio-extension)
   - [2. Using Terminal with PlatformIO CLI](#2-using-terminal-with-platformio-cli)
 - [Project Structure](#project-structure)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
+  - [Code of Conduct](#code-of-conduct)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
 
+---
+
 ## Overview
 
-The **ESP32 Weather Alert System** is a comprehensive project that utilizes an ESP32 microcontroller to monitor environmental conditions such as temperature and humidity. When sudden changes in these parameters are detected beyond predefined thresholds, the system sends alert emails to designated recipients. Additionally, the project includes a web-based GUI for real-time monitoring and configuration.
+The **ESP32-C3 Home Weather Alert System** uses an ESP32-C3 microcontroller to monitor temperature and humidity via a **DHT** sensor. When significant changes in these parameters are detected beyond predefined thresholds, the system automatically sends out email alerts to designated recipients. The project also features a **web-based GUI** for real-time data monitoring and configuration, including threshold adjustments, NTP synchronization, and debug logs.
+
+---
 
 ## Features
 
-- **Real-Time Sensor Monitoring:** Continuously reads temperature and humidity data using a DHT sensor.
-- **Email Alerts:** Sends automated email notifications when significant changes in temperature or humidity are detected.
-- **Web-Based GUI:** Provides a user-friendly interface to monitor sensor data and manage settings.
-- **NTP Time Synchronization:** Ensures accurate timestamping of emails and logs by syncing with NTP servers.
-- **Network Resilience:** Automatically reconnects to Wi-Fi in case of disconnections.
-- **Configurable Thresholds:** Allows customization of temperature and humidity change thresholds for alerts.
-- **Debugging Support:** Detailed logs for easy troubleshooting and monitoring of system performance.
+- **Real-Time Sensor Monitoring**: Continuously reads temperature and humidity data using a DHT sensor (DHT11 or DHT22).
+- **Email Alerts**: Automates email notifications when significant changes in temperature or humidity occur.
+- **Web-Based GUI**: Offers a user-friendly interface to view sensor data and manage system settings.
+- **NTP Time Sync**: Ensures accurate timestamps by synchronizing with an NTP server.
+- **Network Resilience**: Reconnects to Wi-Fi automatically if the connection is lost.
+- **Configurable Thresholds**: Allows you to set high/low temperature and humidity thresholds.
+- **Debug Logging**: Provides detailed logs for troubleshooting.
+
+---
 
 ## Hardware Requirements
 
-- **ESP32 Development Board:** Compatible with ESP32-C3 or other ESP32 variants.
-- **DHT Sensor:** DHT11, DHT22, or compatible temperature and humidity sensor.
-- **Jumper Wires:** For connecting the DHT sensor to the ESP32.
-- **Breadboard:** Optional, for prototyping connections.
-- **Power Supply:** USB cable or suitable power adapter for the ESP32.
+- **ESP32-C3 Development Board** (e.g., ESP32-C3-DevKitM-1)
+- **DHT Sensor** (DHT11 or DHT22)
+- **OLED or LCD Display** (Optional, but recommended for local data visualization)
+- **Jumper Wires**
+- **Breadboard** (Optional, for prototyping)
+- **USB Cable / Power Adapter** for ESP32
 
 ### Example Hardware Setup
 
-![Hardware Setup](https://github.com/jakhon37/esp32-c3-home-weather-alert/assets/hardware_setup.jpg?raw=true)
-<!-- ![Hardware Setup](https://github.com/yourusername/esp32-c3-home-weather-alert/blob/main/assets/hardware_setup.jpg?raw=true) -->
+Below is a **breadboard wiring diagram** showing how to connect a **DHT22** sensor and an **OLED** display to the **ESP32-C3**:
+
+![ESP32-C3 Home Weather Station](assets/circuit_design.png)
+
+1. **DHT22 Connections**:
+   - **Pin 1 (VCC)** → **3.3V** on ESP32
+   - **Pin 2 (Data)** → **GPIO10** on ESP32
+   - **Pin 3 (NC)** → Not Connected
+   - **Pin 4 (GND)** → **GND** on ESP32
+
+2. **OLED Connections**:
+   - **VCC** → **3.3V** on ESP32
+   - **GND** → **GND** on ESP32
+   - **SDA** → **GPIO8** (SDA default for ESP32-C3)
+   - **SCK** → **GPIO9** (SCL default for ESP32-C3)
+
+### ESP32-C3 Pinout
+
+From the above image, you can see there is a **pinout diagram** for the ESP32-C3 DevKit, showing default I2C pins (GPIO8 for SDA, GPIO9 for SCL) and available GPIO pins:
+
+<!-- ![ESP32-C3 Pinout](assets/esp32-c3supermini.jpeg) -->
+
+### DHT Sensor Pinouts
+
+Depending on your DHT sensor model, use the corresponding pinout diagram:
+
+<!-- ![DHT Pinouts](assets/dht_pinouts.webp) -->
+
+- **DHT11** or **DHT22** typically have:
+  1. **VCC** (3.3V)
+  2. **Data**
+  3. **NC** (Not Connected)
+  4. **GND**
+
+---
 
 ## Software Requirements
 
-- **PlatformIO:** An open-source ecosystem for IoT development with cross-platform build system.
-- **Visual Studio Code (VSCode):** Recommended IDE with PlatformIO extension.
-- **ESP Mail Client Library:** For managing SMTP sessions and sending emails.
-- **Adafruit DHT Sensor Library:** For interfacing with the DHT sensor.
-- **Arduino Framework:** For programming the ESP32.
+- **PlatformIO**: Cross-platform build system, integrated into **VSCode**.
+- **Arduino Framework**: Underlying development environment for the ESP32.
+- **Adafruit DHT Sensor Library**: For interfacing with the DHT sensor.
+- **ESP Mail Client Library**: For sending email alerts.
+- **LiquidCrystal_I2C** or **Adafruit_SSD1306** (optional) for display usage.
+
+---
 
 ## Installation
 
@@ -62,21 +115,19 @@ The **ESP32 Weather Alert System** is a comprehensive project that utilizes an E
 
 If you haven't installed PlatformIO yet, follow these steps:
 
-1. **Install Visual Studio Code (VSCode):**
-   - Download and install from [here](https://code.visualstudio.com/).
+1. **Install Visual Studio Code (VSCode)**:
+   - Download and install from [VSCode Download](https://code.visualstudio.com/).
 
-2. **Install PlatformIO Extension:**
+2. **Install PlatformIO Extension**:
    - Open VSCode.
    - Navigate to the Extensions panel (`Ctrl+Shift+X` or `Cmd+Shift+X` on macOS).
    - Search for `PlatformIO IDE` and install the official extension.
 
-3. **Verify Installation:**
-   - Open the PlatformIO Home by clicking on the PlatformIO icon in the sidebar.
-   - Ensure that PlatformIO Core is up-to-date.
+3. **Verify Installation**:
+   - Click on the PlatformIO icon in the sidebar to open PlatformIO Home.
+   - Ensure PlatformIO Core is up-to-date.
 
 ### 2. Clone the Repository
-
-Clone this repository to your local machine:
 
 ```sh
 git clone https://github.com/jakhon37/esp32-c3-home-weather-alert.git
@@ -85,30 +136,30 @@ cd esp32-c3-home-weather-alert
 
 ### 3. Open the Project in VSCode
 
-1. Open VSCode.
-2. Navigate to **File > Open Folder** and select the cloned `esp32-c3-home-weather-alert` directory.
-3. PlatformIO should automatically detect the project configuration.
+1. **File > Open Folder**
+2. Select the cloned `esp32-c3-home-weather-alert` directory.
+3. PlatformIO should automatically detect the project.
 
 ### 4. Install Dependencies
 
-Ensure that all required libraries are installed. PlatformIO manages dependencies via the `platformio.ini` file. To install them:
+Open a new terminal in VSCode (`Ctrl+`` or **View > Terminal**) and run:
 
-1. Open the Terminal in VSCode (`Ctrl+`` or **View > Terminal**).
-2. Run the build command to trigger library installation:
+```sh
+pio run
+```
 
-   ```sh
-   pio run
-   ```
+Or click the **PlatformIO Build** button (checkmark icon) or press `Ctrl+Shift+P` → `PlatformIO: Build`.
 
-   PlatformIO will automatically download and install the necessary libraries specified in `platformio.ini`.
+
+PlatformIO will fetch and install necessary libraries defined in `platformio.ini`.
+
+---
 
 ## Configuration
 
 ### 1. Configure Wi-Fi Credentials
 
-Edit the `Config.h` file to include your Wi-Fi and email credentials.
-
-**`include/Config.h`:**
+Edit `include/Config.h`:
 
 ```cpp
 #ifndef CONFIG_H
@@ -120,245 +171,175 @@ const char* WIFI_PASSWORD = "Your_WiFi_Password";
 
 // Email Configuration
 const char* SMTP_HOST = "smtp.gmail.com";
-const uint16_t SMTP_PORT = 587; // Use 587 for STARTTLS or 465 for SSL/TLS
+const uint16_t SMTP_PORT = 587; // 465 for SSL/TLS
 const char* AUTHOR_EMAIL = "your_email@gmail.com";
 const char* AUTHOR_PASSWORD = "your_email_password_or_app_specific_password";
 const char* RECIPIENT_EMAIL = "recipient_email@example.com";
 
 // Alert Thresholds
-const float TEMP_CHANGE_THRESHOLD = 5.0;       // Temperature change threshold in °C
-const float HUM_CHANGE_THRESHOLD = 10.0;       // Humidity change threshold in %
-const unsigned long ALERT_COOLDOWN = 60000;    // Cooldown period in milliseconds (e.g., 1 minute)
+const float TEMP_CHANGE_THRESHOLD = 5.0; // °C
+const float HUM_CHANGE_THRESHOLD = 10.0; // %
+const unsigned long ALERT_COOLDOWN = 60000; // 1 min in ms
 
 #endif // CONFIG_H
 ```
 
-**Security Note:** For enhanced security, consider using App Passwords or environment variables to manage sensitive credentials. Avoid hardcoding passwords directly in the source code, especially if the code is stored in a public repository.
+**Security Note**: For production or public repos, avoid hardcoding credentials—consider app passwords or environment variables.
 
 ### 2. Adjust SMTP Port and Security Settings
 
-- **Port 587:** Recommended for **STARTTLS** encryption.
-- **Port 465:** Recommended for **SSL/TLS** encryption.
-
-Ensure that the `SMTP_PORT` in `Config.h` matches your chosen security protocol.
+- **Port 587** for **STARTTLS**.
+- **Port 465** for **SSL/TLS**.
 
 ### 3. Calibrate Alert Thresholds
 
-Modify the `TEMP_CHANGE_THRESHOLD` and `HUM_CHANGE_THRESHOLD` in `Config.h` to set the desired sensitivity for alerts.
+Set `TEMP_CHANGE_THRESHOLD` and `HUM_CHANGE_THRESHOLD` to fine-tune alert sensitivity.
+
+---
 
 ## Usage
 
-You can run the project in two primary ways:
+You can build, upload, and monitor your project via **VSCode** or **Terminal**.
 
 ### 1. Using VSCode PlatformIO Extension
 
-This method leverages the integrated development environment features of VSCode with the PlatformIO extension.
+1. **Build**:
+   - Click the **PlatformIO Build** button (checkmark icon) or press `Ctrl+Shift+P` → `PlatformIO: Build`.
 
-#### Steps:
+2. **Upload**:
+   - Connect ESP32-C3 via USB.
+   - Click the **PlatformIO Upload** button (right arrow icon).
 
-1. **Open the Project in VSCode:**
-   - Launch VSCode.
-   - Open the `esp32-c3-home-weather-alert` folder via **File > Open Folder**.
+3. **Monitor Serial**:
+   - Click the **PlatformIO Monitor** button (plug icon).
+   - Set baud rate to **115200** if prompted.
 
-2. **Configure PlatformIO:**
-   - Ensure that the `platformio.ini` file is correctly set up with your board and environment settings.
-   - Example `platformio.ini`:
-
-     ```ini
-     [env:esp32-c3-devkitm-1]
-     platform = espressif32
-     board = esp32-c3-devkitm-1
-     framework = arduino
-
-     monitor_speed = 115200
-
-     lib_deps = 
-         mobizt/ESP Mail Client @ ^3.4.24
-         adafruit/DHT sensor library @ ^1.4.6
-     ```
-
-3. **Build the Project:**
-   - Click on the **PlatformIO Build** button (checkmark icon) in the bottom bar or use the Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P` on macOS) and select `PlatformIO: Build`.
-
-4. **Upload the Firmware:**
-   - Connect your ESP32 board via USB.
-   - Click on the **PlatformIO Upload** button (right arrow icon) or use the Command Palette and select `PlatformIO: Upload`.
-
-5. **Monitor Serial Output:**
-   - Click on the **PlatformIO Monitor** button (plug icon) or use the Command Palette and select `PlatformIO: Monitor`.
-   - Set the baud rate to `115200` if prompted.
-
-6. **Interact with the Web-Based GUI:**
-   - After successful deployment, note the IP address displayed in the serial monitor.
-   - Open a web browser and navigate to `http://<ESP32_IP_Address>` to access the GUI.
+4. **Web GUI**:
+   - Check the Serial output for your ESP32 IP address.
+   - Open a browser and go to `http://<ESP32_IP_Address>`.
 
 ### 2. Using Terminal with PlatformIO CLI
 
-For those who prefer using the command line, PlatformIO provides a robust CLI to manage builds, uploads, and monitoring.
-
-#### Prerequisites:
-
-- **PlatformIO CLI Installed:** Ensure that PlatformIO is installed. If you have the PlatformIO extension in VSCode, the CLI is typically available. Alternatively, you can install it globally using Python's `pip`:
-
-  ```sh
-  pip install platformio
-  ```
-
-#### Steps:
-
-1. **Navigate to Project Directory:**
-
+1. **Install PlatformIO CLI** (if not already):
    ```sh
-   cd path/to/esp32-c3-home-weather-alert
+   pip install platformio
    ```
 
-2. **Build the Project:**
-
+2. **Build**:
    ```sh
    pio run
    ```
 
-   - This command compiles the project and installs any missing dependencies as specified in `platformio.ini`.
-
-3. **Upload the Firmware:**
-
+3. **Upload**:
    ```sh
    pio run -t upload
    ```
 
-   - Connect your ESP32 board via USB before running this command.
-   - The CLI will detect the board and upload the compiled firmware.
-
-4. **Monitor Serial Output:**
-
+4. **Monitor**:
    ```sh
    pio device monitor -b 115200
    ```
 
-   - This command opens a serial monitor with a baud rate of `115200`.
-   - To exit the monitor, press `Ctrl+]` or `Ctrl+X`.
+5. **Web GUI**:
+   - Note the IP address in the Serial Monitor.
+   - Open `http://<ESP32_IP_Address>` in your browser.
 
-5. **Interact with the Web-Based GUI:**
-   - After successful deployment, note the IP address displayed in the serial monitor.
-   - Open a web browser and navigate to `http://<ESP32_IP_Address>` to access the GUI.
-
-#### Additional CLI Commands:
-
-- **Clean the Build Environment:**
-
-  ```sh
-  pio run --target clean
-  ```
-
-  - Removes all compiled files, forcing a full rebuild on the next build command.
-
-- **Run Unit Tests:**
-
-  ```sh
-  pio test
-  ```
-
-  - Executes any tests located in the `test/` directory.
-
-- **Update PlatformIO Core:**
-
-  ```sh
-  pio upgrade
-  ```
-
-  - Updates PlatformIO Core to the latest version.
+---
 
 ## Project Structure
 
 ```
-esp32-weather-alert/
+esp32-c3-home-weather-alert/
 ├── include/
 │   ├── Config.h
-│   └── ... (other header files)
+│   └── (other headers)
 ├── lib/
-│   ├── EmailClient/
-│   │   ├── EmailClient.h
-│   │   └── EmailClient.cpp
 │   ├── DhtSensor/
-│   │   ├── DhtSensor.h
-│   │   └── DhtSensor.cpp
-│   └── ... (other libraries)
+│   ├── EmailClient/
+│   ├── WebGui/
+│   ├── OLEDDisplay/ (or LCDisplay/)
+│   └── ...
 ├── src/
-│   ├── main.cpp
-│   └── ... (other source files)
+│   └── main.cpp
 ├── test/
-│   └── ... (test files)
 ├── platformio.ini
 ├── README.md
 └── CODE_OF_CONDUCT.md
 ```
 
-- **include/**: Contains configuration headers and shared declarations.
-- **lib/**: Houses custom libraries like `EmailClient` and `DhtSensor`.
-- **src/**: Main application source files.
-- **test/**: Unit tests and minimal test cases.
-- **platformio.ini**: PlatformIO project configuration file.
+- **include/**: Shared headers and configurations (`Config.h`).
+- **lib/**: Custom libraries (e.g., `DhtSensor`, `EmailClient`, `WebGui`, `OLEDDisplay`/`LCDisplay`).
+- **src/**: Main application source (`main.cpp`).
+- **test/**: Unit or integration tests.
+- **platformio.ini**: PlatformIO build and dependency configuration.
 - **README.md**: Project documentation.
-- **CODE_OF_CONDUCT.md**: Guidelines for community behavior.
 
-### Debugging Steps
+---
 
-- **Enable Debugging:**
-  - Ensure `smtp.debug(1);` is enabled in `EmailClient.cpp` to get detailed logs.
-  
-- **Check Serial Monitor:**
-  - Use the serial monitor to view logs and identify where the process might be failing.
-  
-- **Verify NTP Time Synchronization:**
-  - Ensure that the ESP32 can reach NTP servers to synchronize time, which is crucial for timestamping emails.
+## Troubleshooting
+
+1. **Check Wiring**:
+   - Ensure DHT sensor pinout is correct.
+   - Verify SDA and SCL pins for I2C devices (OLED) match the code.
+
+2. **I2C Address**:
+   - If the OLED isn't displaying, use an I2C scanner to confirm the address (`0x3C`, etc.).
+
+3. **Serial Monitor**:
+   - Watch logs for Wi-Fi connection issues, sensor read failures, or email errors.
+   - Increase debug outputs if needed.
+
+4. **Email Credentials**:
+   - If using Gmail with 2FA, generate an [App Password](https://support.google.com/accounts/answer/185833) instead of your normal password.
+
+5. **NTP Sync**:
+   - Verify the NTP server address if time synchronization fails.
+
+---
 
 ## Contributing
 
-Contributions are welcome! Please follow these steps to contribute to the project:
-
-1. **Fork the Repository:**
-   - Click the **"Fork"** button on the repository page.
-
-2. **Clone Your Fork:**
+1. **Fork and Clone**:
    ```sh
    git clone https://github.com/<yourusername>/esp32-c3-home-weather-alert.git
    cd esp32-c3-home-weather-alert
    ```
 
-3. **Create a New Branch:**
+2. **Create a Branch**:
    ```sh
-   git checkout -b feature/YourFeatureName
+   git checkout -b feature/AmazingFeature
    ```
 
-4. **Make Changes and Commit:**
+3. **Make Changes & Commit**:
    ```sh
-   git commit -m "Add Your Feature"
+   git commit -m "Add AmazingFeature"
    ```
 
-5. **Push to Your Fork:**
+4. **Push & Pull Request**:
    ```sh
-   git push origin feature/YourFeatureName
+   git push origin feature/AmazingFeature
    ```
-
-6. **Create a Pull Request:**
-   - Navigate to the original repository and create a pull request from your fork.
+   - Submit a PR on GitHub.
 
 ### Code of Conduct
 
-Please adhere to the [Code of Conduct](https://github.com/jakhon37/esp32-c3-home-weather-alert/blob/main/CODE_OF_CONDUCT.md) when contributing to this project.
-
-## License
-
-Distributed under the MIT License. See `LICENSE` for more information.
-
-## Acknowledgments
-
-- [ESP-Mail-Client by Mobizt](https://github.com/mobizt/ESP-Mail-Client) for providing the robust mail client library.
-- [Adafruit DHT Sensor Library](https://github.com/adafruit/DHT-sensor-library) for simplifying sensor integration.
-- The open-source community for valuable resources and support.
+Please follow the [Code of Conduct](https://github.com/jakhon37/esp32-c3-home-weather-alert/blob/main/CODE_OF_CONDUCT.md) to help maintain a welcoming environment for all contributors.
 
 ---
 
-**Happy Coding!**
+## License
 
-For any further questions or support, feel free to open an issue on the [GitHub repository](https://github.com/jakhon37/esp32-c3-home-weather-alert/issues).
+Distributed under the **MIT License**. Refer to `LICENSE` for details.
+
+---
+
+## Acknowledgments
+
+- [ESP-Mail-Client by Mobizt](https://github.com/mobizt/ESP-Mail-Client) — robust email sending support.
+- [Adafruit DHT Sensor Library](https://github.com/adafruit/DHT-sensor-library) — easy DHT sensor handling.
+- [Adafruit SSD1306 / LiquidCrystal_I2C](https://github.com/adafruit/) — display libraries for visual feedback.
+- The open-source community for invaluable resources, examples, and troubleshooting help.
+
+---
+
+If you have any questions or need support, please open an issue in the [GitHub repository](https://github.com/jakhon37/esp32-c3-home-weather-alert/issues).  

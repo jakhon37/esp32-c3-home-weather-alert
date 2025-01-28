@@ -6,6 +6,7 @@
 #include "DhtSensor.h"
 #include "EmailClient.h"
 #include "LCDisplay.h"
+#include "OLEDDisplay.h"
 #include "WebGui.h"
 #include "Utils.h"
 
@@ -15,6 +16,8 @@ const char* NTP_SERVER = "pool.ntp.org";
 const long GMT_OFFSET_SEC = 32400;  // Korea Standard Time (UTC+9)
 const int DAYLIGHT_OFFSET_SEC = 0;
 
+// Instantiate OLEDDisplay
+OLEDDisplay oled(OLED_WIDTH, OLED_HEIGHT, OLED_SDA_PIN, OLED_SCL_PIN, OLED_RESET_PIN);
 
 // Instantiate classes
 DhtSensor dhtSensor(DHTPIN, DHTTYPE);
@@ -49,6 +52,9 @@ float tempDiff = 0;
 float humDiff = 0;
 // Timestamp to manage alert cooldown
 unsigned long lastAlertTime = 0;
+// WiFi Connection Timeout (e.g., 30 seconds)
+const unsigned long WIFI_TIMEOUT = 30000; // 30,000 milliseconds
+unsigned long wifiStartTime = 0;
 
 void setup() {
     Serial.begin(115200);
@@ -56,6 +62,15 @@ void setup() {
 
     delay(100);
 
+    // Initialize OLED Display
+    Serial.println("Initializing OLED Display...");
+    if (oled.init()) {
+        Serial.println("OLED Display Initialized Successfully.");
+    } else {
+        Serial.println("Failed to Initialize OLED Display.");
+        // Optionally, halt the system or attempt re-initialization
+        while (1);
+    }
     // Initialize LCD Display
     displayLCD.init();
     Serial.println("LCD Display Initialized.");
@@ -66,23 +81,50 @@ void setup() {
 
     // Connect to WiFi
     Serial.println("Connecting to WiFi...");
+    oled.displayStatus("Connecting WiFi", "Please Wait...");
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+    wifiStartTime = millis();
     while (WiFi.status() != WL_CONNECTED) {
         delay(500);
         Serial.print(".");
+
+        // Optionally, update OLED to show connection progress
+        static int dotCount = 0;
+        dotCount = (dotCount + 1) % 4;
+        char statusMessage[32];
+        snprintf(statusMessage, sizeof(statusMessage), "Connecting WiFi");
+        oled.displayStatus(statusMessage, "Please Wait...");
+        // Implement timeout
+        if (millis() - wifiStartTime > WIFI_TIMEOUT) {
+            Serial.println("\nWiFi connection timed out!");
+            oled.displayStatus("WiFi Timeout", "Retrying...");
+            WiFi.begin(WIFI_SSID, WIFI_PASSWORD); // Retry
+            wifiStartTime = millis();
+        }
     }
     Serial.println("\nWiFi connected!");
     Serial.print("IP address: ");
     Serial.println(WiFi.localIP());
+   // Update OLED with WiFi connection status
+    String ipAddress = String(WiFi.localIP());
+    oled.displayStatus("WiFi Connected", ("IP: " + ipAddress).c_str());
+    delay(2000); // Display IP address for 2 seconds
 
-    // Add these in your main.cpp setup() after WiFi connection:
-    // MailClient.networkReconnect(true);
-    // configTime(0, 0, "pool.ntp.org", "time.nist.gov");  // Add NTP configuration
-
-    // In setup() after WiFi connection:
+    // Initialize Time (NTP)
     Serial.println("Syncing time with NTP server...");
     configTime(GMT_OFFSET_SEC, DAYLIGHT_OFFSET_SEC, NTP_SERVER);
-
+    struct tm timeinfo;
+    if (!getLocalTime(&timeinfo)) {
+        Serial.println("Failed to obtain time");
+        oled.displayStatus("Time Error", "Failed to sync");
+    } else {
+        char timeString[32];
+        strftime(timeString, sizeof(timeString), "%A, %B %d %Y %H:%M:%S", &timeinfo);
+        Serial.println(timeString);
+        oled.displayStatus("Current Time:", timeString);
+        delay(2000); // Display time for 2 seconds
+        oled.clear();
+    }
     // Wait for time synchronization
     time_t now = 0;
     while (time(&now) < ESP_MAIL_CLIENT_VALID_TS) {
@@ -94,10 +136,25 @@ void setup() {
 
         
     // Initialize Web GUI
+    Serial.println("Initializing Web GUI...");
     webGui.begin();
+    Serial.println("Web GUI Initialized.");
 
 
-    Serial.println("Setup complete.");
+
+    // // Initialize Email Client
+    // Serial.println("Initializing Email Client...");
+    // bool emailInit = emailClient.init();
+    // if (emailInit) {
+    //     Serial.println("Email Client Initialized Successfully.");
+    //     oled.displayStatus("Email", "Client Ready");
+    // } else {
+    //     Serial.println("Failed to Initialize Email Client.");
+    //     oled.displayStatus("Email Error", "Client Failed");
+    // }
+
+    Serial.println("Setup Complete.");
+
 }
 
 void loop() {
@@ -113,6 +170,7 @@ void loop() {
         if (sent_welcome == 0) {
                 bool emailSent = emailClient.sendAlert(Temperature, Humidity, tempDiff, humDiff, sent_welcome);
                 Serial.println("Welcome email sent successfully.");
+                oled.displayStatus("Email", "Welcome email sent successfully.");
                 sent_welcome = 1;
         }
         if (success) {
@@ -121,6 +179,9 @@ void loop() {
             Serial.printf("Temperature: %.1f°C, Humidity: %.1f%%\n", Temperature, Humidity);
             // Update the LCD with new sensor data
             displayLCD.displayTempHum(Temperature, Humidity);
+
+            // Update the OLED with new sensor data
+            oled.displayTempHum(Temperature, Humidity);
 
             // Calculate differences from previous readings
             float tempDiff = Utils::calculateDifference(Temperature, prevTemperature);
@@ -136,8 +197,10 @@ void loop() {
                     bool emailSent = emailClient.sendAlert(Temperature, Humidity, tempDiff, humDiff, sent_welcome);
                     if (emailSent) {
                         Serial.println("Email alert sent successfully.");
+                        oled.displayStatus("Alert Sent", "Check Email");
                     } else {
                         Serial.println("Failed to send email alert.");
+                        oled.displayStatus("Email Error", "Failed to Send");
                     }
                 }
                 // Update previous readings
@@ -151,6 +214,7 @@ void loop() {
         } else {
             Serial.println("Failed to read from DHT sensor!");
             displayLCD.displayTempHum(0.0, 0.0); // Optional: Display error message
+            oled.displayStatus("Sensor Error", "Read Failed");
 
         }
     }
