@@ -20,6 +20,7 @@ const char* USER_DOMAIN = "gmail.com"; // change it according to your email doma
 
 const char* EMAIL_RECIPIENT = "recipient_email@example.com";
 
+
 // ===========================
 // DHT Sensor Configuration
 // ===========================
@@ -33,16 +34,25 @@ const char* EMAIL_RECIPIENT = "recipient_email@example.com";
 #define LCD_COLS 16
 #define LCD_ROWS 2
 
-#define SDA_PIN 8
-#define SCL_PIN 9
+#define SDA_PIN 20 //8
+#define SCL_PIN 21 //9
+
+
+// ===========================
+// OLED Display Configuration
+// ===========================
+#define OLED_WIDTH 128
+#define OLED_HEIGHT 32
+#define OLED_SDA_PIN 8 //20 //8
+#define OLED_SCL_PIN 9 //21 //9
+#define OLED_RESET_PIN -1
 
 // ===========================
 // Alert Thresholds
 // ===========================
-// In Config.h
 const float TEMP_HIGH_THRESHOLD = 26.5;
 const float TEMP_LOW_THRESHOLD = 22.0;
-const float HUM_HIGH_THRESHOLD = 99.8;
+const float HUM_HIGH_THRESHOLD = 85.0;
 const float HUM_LOW_THRESHOLD = 40.0;
 
 

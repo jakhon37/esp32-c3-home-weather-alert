@@ -176,12 +176,35 @@ const char* AUTHOR_EMAIL = "your_email@gmail.com";
 const char* AUTHOR_PASSWORD = "your_email_password_or_app_specific_password";
 const char* RECIPIENT_EMAIL = "recipient_email@example.com";
 
+// DHT Sensor Configuration
+#define DHTPIN 10
+#define DHTTYPE DHT22
+
+// LCD Display Configuration
+#define LCD_ADDRESS 0x27
+#define LCD_COLS 16
+#define LCD_ROWS 2
+#define SDA_PIN 20 //8
+#define SCL_PIN 21 //9
+
+// OLED Display Configuration
+#define OLED_WIDTH 128
+#define OLED_HEIGHT 32
+#define OLED_SDA_PIN 8 //20 //8
+#define OLED_SCL_PIN 9 //21 //9
+#define OLED_RESET_PIN -1
+
 // Alert Thresholds
-const float TEMP_CHANGE_THRESHOLD = 5.0; // °C
-const float HUM_CHANGE_THRESHOLD = 10.0; // %
-const unsigned long ALERT_COOLDOWN = 60000; // 1 min in ms
+const float TEMP_HIGH_THRESHOLD = 26.5;
+const float TEMP_LOW_THRESHOLD = 22.0;
+const float HUM_HIGH_THRESHOLD = 85.0;
+const float HUM_LOW_THRESHOLD = 40.0;
+const float TEMP_CHANGE_THRESHOLD = 1.0;       // °C
+const float HUM_CHANGE_THRESHOLD = 5.0;        // %
+const unsigned long ALERT_COOLDOWN = 60000;     // 1 minute in milliseconds
 
 #endif // CONFIG_H
+
 ```
 
 **Security Note**: For production or public repos, avoid hardcoding credentials—consider app passwords or environment variables.
