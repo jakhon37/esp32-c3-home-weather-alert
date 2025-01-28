@@ -68,7 +68,7 @@ void setup() {
         Serial.println("OLED Display Initialized Successfully.");
     } else {
         Serial.println("Failed to Initialize OLED Display.");
-        // Optionally, halt the system or attempt re-initialization
+        // halt the system or attempt re-initialization
         while (1);
     }
     // Initialize LCD Display
@@ -88,7 +88,7 @@ void setup() {
         delay(500);
         Serial.print(".");
 
-        // Optionally, update OLED to show connection progress
+        // update OLED to show connection progress
         static int dotCount = 0;
         dotCount = (dotCount + 1) % 4;
         char statusMessage[32];
@@ -213,7 +213,7 @@ void loop() {
             // prevHumidity = Humidity;
         } else {
             Serial.println("Failed to read from DHT sensor!");
-            displayLCD.displayTempHum(0.0, 0.0); // Optional: Display error message
+            displayLCD.displayTempHum(0.0, 0.0); // Display error message
             oled.displayStatus("Sensor Error", "Read Failed");
 
         }
