@@ -39,6 +39,10 @@
 The **ESP32-C3 Home Weather Alert System** uses an ESP32-C3 microcontroller to monitor temperature and humidity via a **DHT** sensor. When significant changes in these parameters are detected beyond predefined thresholds, the system automatically sends out email alerts to designated recipients. The project also features a **web-based GUI** for real-time data monitoring and configuration, including threshold adjustments, NTP synchronization, and debug logs.
 
 ---
+Web Demo: [ESP32-C3 Home Weather Alert System - 14.4.202.60:80](14.4.202.60:80)
+<!-- [GitHub repository](https://github.com/jakhon37/esp32-c3-home-weather-alert/issues).   -->
+<!-- Web Demo: https://14.4.202.60:80  -->
+---
 
 ## Features
 
@@ -95,7 +99,7 @@ Depending on your DHT sensor model, use the corresponding pinout diagram:
   - **VCC** (3.3V)
   - **Data**
   - **NC** (Not Connected)
-  - **GND**
+  - **GND**[GitHub repository](https://github.com/jakhon37/esp32-c3-home-weather-alert/issues).  
 
 ---
 
